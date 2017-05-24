@@ -8,7 +8,7 @@ import java.awt.*;
 public class Board {
 
     public enum Tiles{
-        EMPTY("O"), HIT("X"), VSHIP("|"), HSHIP("-");
+        EMPTY(" "), HIT("X"), VSHIP("|"), HSHIP("-");
         public final String value;
 
         Tiles(String value){
@@ -18,8 +18,10 @@ public class Board {
 
     public final int WIDTH;
     public final int HEIGHT;
+    private int shipSegments = 0;
 
     private Tiles[][] board;
+
 
     public Board(){
         WIDTH = 10;
@@ -35,7 +37,7 @@ public class Board {
         cleanBoard();
     }
 
-    private void cleanBoard(){
+    protected void cleanBoard(){
 
         for (int i=0; i<HEIGHT; ++i){
             for (int j=0; j<WIDTH; ++j){
@@ -61,6 +63,7 @@ public class Board {
                             "placeShip tried to place ship on occupied position[x:"+xPos+", y: "+yPos+"]"
                     );
                     board[i][xPos] = Tiles.VSHIP;
+                    ++shipSegments;
                 }
                 break;
 
@@ -70,6 +73,7 @@ public class Board {
                             "placeShip tried to place ship on occupied position[x:"+xPos+", y: "+yPos+"]"
                     );
                     board[yPos][i] = Tiles.HSHIP;
+                    ++shipSegments;
                 }
                 break;
         }
@@ -139,16 +143,20 @@ public class Board {
                 return false;
             case VSHIP:
                 board[point.y][point.x] = Tiles.HIT;
-                //todo remove player/ship life
+                --shipSegments;
                 return true;
             case HSHIP:
                 board[point.y][point.x] = Tiles.HIT;
-                //todo remove player/ship life
+                --shipSegments;
                 return true;
         }
         return false;
     }
 
+
+    protected boolean shipsLeft(){
+        return shipSegments > 0;
+    }
 
     /**
      *
