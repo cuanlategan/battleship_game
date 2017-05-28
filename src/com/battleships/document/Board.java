@@ -1,0 +1,136 @@
+package com.battleships.document;
+
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+
+public class Board {
+
+    public enum Tile {
+        EMPTY("O"), HIT("X"), VSHIP("|"), HSHIP("-");
+        private final String value;
+
+        Tile(String value) {
+            this.value = value;
+        }
+        public String getValue() {
+            return value;
+        }
+
+    }
+
+    public final int WIDTH;
+    public final int HEIGHT;
+
+    private int shipLives = 0;
+    private final List<List<Tile>> tiles;
+
+
+    public Board() {
+        WIDTH = 10;
+        HEIGHT = 10;
+        tiles = Collections.unmodifiableList(createTiles());
+    }
+
+    public Board(int width, int height) {
+        WIDTH = width;
+        HEIGHT = height;
+        tiles = Collections.unmodifiableList(createTiles());
+    }
+
+
+    private List<List<Tile>> createTiles() {
+        List<List<Tile>> result = new ArrayList<>();
+        for (int i = 0; i < HEIGHT; ++i) {
+            Tile[] row = new Tile[WIDTH];
+            Arrays.fill(row, Tile.EMPTY);
+            result.add(Arrays.stream(row).collect(Collectors.toList()));
+        }
+        return result;
+    }
+
+
+    public void placeShip(Ship ship) {
+
+        final int minX = ship.getMinX();
+        final int minY = ship.getMinY();
+        final int maxX = ship.getMaxX();
+        final int maxY = ship.getMaxY();
+
+        Tile tile = (ship.getDir() == Ship.Dir.VERTICAL) ? Tile.VSHIP : Tile.HSHIP;
+
+        for (int i = minY; i <= maxY; ++i) {
+            for (int j = minX; j <= maxX ; ++j) {
+                if (tiles.get(i).get(j) != Tile.EMPTY) throw new RuntimeException(
+                        "placeShip tried to place ship on occupied position[x:" + minX + ", y: " + minY + "]"
+                );
+                tiles.get(i).set(j, tile);
+                ++shipLives;
+            }
+        }
+    }
+
+
+    public boolean canPlaceShip(Ship ship) {
+
+        final int minX = ship.getMinX();
+        final int minY = ship.getMinY();
+        final int maxX = ship.getMaxX();
+        final int maxY = ship.getMaxY();
+
+        boolean withinBounds = (0 <= minX && maxX < WIDTH &&
+                                0 <= minY && maxY < HEIGHT);
+
+        if(!withinBounds) return false;
+
+        for (int i = minY; i <= maxY; ++i) {
+            for (int j = minX; j <= maxX; ++j) {
+                if (tiles.get(i).get(j) != Tile.EMPTY) return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param point where bomb will land
+     * @return true if the bomb hit a ship
+     */
+    public boolean receiveBomb(Point point) {
+
+        Tile tile = tiles.get(point.y).get(point.x);
+
+        switch (tile) {
+            case EMPTY:
+                return false;
+            //todo add miss tile to Tiles
+            case HIT:
+                return false;
+            case VSHIP:
+                tiles.get(point.y).set(point.x, Tile.HIT);
+                --shipLives;
+                return true;
+            case HSHIP:
+                tiles.get(point.y).set(point.x, Tile.HIT);
+                --shipLives;
+                return true;
+        }
+        return false;
+    }
+
+
+    public boolean shipsLeft() {
+        return shipLives > 0;
+    }
+    public int getShipLives(){
+        return shipLives;
+    }
+
+    public final List<List<Tile>> getTiles() {return tiles;}
+
+}

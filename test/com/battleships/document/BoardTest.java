@@ -1,13 +1,14 @@
-package com.battleships;
+package com.battleships.document;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.battleships.view.Main;
 import org.junit.Test;
 import java.awt.*;
 
-/**
- * Created by cuan on 22.05.17.
- */
+
 public class BoardTest {
 
     private Board board;
@@ -20,7 +21,7 @@ public class BoardTest {
         String empty = Board.Tile.EMPTY.getValue();
         String expected = empty+empty+"\n"+empty+empty+"\n"+empty+empty+"\n";
         board = new Board(2, 3);
-        assertEquals("Testing board directionality failed",expected,board.printBoard());
+        assertEquals("Testing board directionality failed", expected, Main.printTiles(board.getTiles()));
     }
 
 
@@ -30,7 +31,7 @@ public class BoardTest {
         String empty = Board.Tile.EMPTY.getValue();
         String expected = empty+empty+"\n"+empty+empty+"\n"+empty+empty+"\n";
         board = new Board(3, 2);
-        assertFalse("Testing board directionality failed", expected.equals(board.printBoard()));
+        assertFalse("Testing board directionality failed", expected.equals(Main.printTiles(board.getTiles())));
     }
 
 
@@ -38,12 +39,12 @@ public class BoardTest {
     public void goodPlaceShip(){
         System.out.println("Testing ship placement by filling a small board");
         board = new Board(5,4);
-        assertTrue(board.placeShip(new Ship(horizontal, new Point(0, 0), 4)));
-        assertTrue(board.placeShip(new Ship(horizontal,  new Point(0,1), 4)));
-        assertTrue(board.placeShip(new Ship(horizontal,  new Point(0,2), 4)));
-        assertTrue(board.placeShip(new Ship(horizontal,  new Point(0,3), 4)));
-        assertTrue(board.placeShip(new Ship(vertical, new Point(4,0), 4)));
-        board.printBoard();
+        board.placeShip(new Ship(horizontal, new Point(0, 0), 4));
+        board.placeShip(new Ship(horizontal,  new Point(0,1), 4));
+        board.placeShip(new Ship(horizontal,  new Point(0,2), 4));
+        board.placeShip(new Ship(horizontal,  new Point(0,3), 4));
+        board.placeShip(new Ship(vertical, new Point(4,0), 4));
+        Main.printTiles(board.getTiles());
         System.out.println();
         System.out.println();
     }
@@ -53,15 +54,15 @@ public class BoardTest {
     public void badPlaceShip(){
         System.out.println("Testing ship placement by trying to add a ship to a full board");
         board = new Board(5,4);
-        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,0), 4)));
-        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,1), 4)));
-        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,2), 4)));
-        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,3), 4)));
-        assertTrue(board.placeShip(new Ship(vertical,   new Point(4,0), 4)));
+        board.placeShip(new Ship(horizontal, new Point(0,0), 4));
+        board.placeShip(new Ship(horizontal, new Point(0,1), 4));
+        board.placeShip(new Ship(horizontal, new Point(0,2), 4));
+        board.placeShip(new Ship(horizontal, new Point(0,3), 4));
+        board.placeShip(new Ship(vertical,   new Point(4,0), 4));
         for (int i=0; i<4; ++i){
             for (int j=0; j<5; ++j){
                 Ship ship = new Ship(horizontal,new Point(j,i),1);
-                boolean result = board.placeShip(ship);
+                boolean result = board.canPlaceShip(ship);
                 assertFalse("should not of been able to place ship", result);
             }
         }

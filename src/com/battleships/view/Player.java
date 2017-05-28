@@ -1,22 +1,17 @@
-package com.battleships;
+package com.battleships.view;
+
+import com.battleships.document.Board;
+import com.battleships.document.Ship;
 
 import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.battleships.Ship.*;
 
-/**
- * Created by cuan on 24.05.17.
- */
-public final class Player {
+final class Player {
 
 
-    public void placeAllShipRandomnly(Board board){
-
-        Ship.maxShips.entrySet()
-                .stream()
-                .forEach( ship -> placeShipRandom(board, ship.getKey(),ship.getValue()));
-
+    void placeAllShipRandomnly(Board board){
+        Ship.SHIPS_ALLOWED.forEach((size, amount) -> placeShipRandom(board, size, amount));
     }
 
 
@@ -33,15 +28,19 @@ public final class Player {
                                                   .nextBoolean()
                                                   ? Ship.Dir.HORIZONTAL: Ship.Dir.VERTICAL;
 
-            if(board.placeShip(new Ship(dir,pos,size))) --amount;
-            else --maxAttempts;
+            final Ship ship = new Ship(dir,pos,size);
 
-            if (maxAttempts < 0) throw new RuntimeException("Could not place ships in alloted attemps");
+            if(board.canPlaceShip(ship)){
+                board.placeShip(ship);
+                --amount;
+            }
+            else if (--maxAttempts < 0) throw new RuntimeException("Could not place ships in alloted attemps");
         }
+
     }
 
 
-    public Point chooseBombLocation(Board board){
+    Point chooseBombLocation(Board board){
         final int xPos = ThreadLocalRandom.current().nextInt(board.WIDTH);
         final int yPos = ThreadLocalRandom.current().nextInt(board.HEIGHT);
         return new Point(xPos,yPos);
