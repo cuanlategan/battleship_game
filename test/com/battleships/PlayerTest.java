@@ -33,7 +33,6 @@ public class PlayerTest {
     @Test(expected =  RuntimeException.class)
     public void failPlaceAllBoats(){
         System.out.println();
-        System.out.println("testing placying all boats!");
         board = new Board(2,2);
         player.placeAllShipRandomnly(board);
         board.printBoard();

@@ -13,12 +13,12 @@ public class Main {
     public static void main(String[] args) {
 
         Player player1 = new Player();
-        Board board1 = new Board();
-        player1.placeAllShipRandomnly(board1);
+        Board boardP1 = new Board();
+        player1.placeAllShipRandomnly(boardP1);
 
         Player player2 = new Player();
-        Board board2 = new Board();
-        player2.placeAllShipRandomnly(board2);
+        Board boardP2 = new Board();
+        player2.placeAllShipRandomnly(boardP2);
 
         boolean gameOver = false;
         Turn currentTurn = Turn.PLAYER_1;
@@ -26,40 +26,28 @@ public class Main {
         while (!gameOver){
 
             System.out.println("\n======================================================");
+
             System.out.println(currentTurn + "'s turn");
 
-            switch (currentTurn) {
-                case PLAYER_1:
-                    {
-                        Point bomb = player1.takeChooseBombLocation(board1);
-                        System.out.printf("bomb location chosen: x:%d, y:%d\n", bomb.x, bomb.y);
 
-                        if(board2.receiveBomb(bomb)) System.out.println("hit!\n");
-                        else System.out.println("miss\n");
+            Point bomb = (currentTurn == Turn.PLAYER_1) ? player1.chooseBombLocation(boardP1) :
+                                                          player2.chooseBombLocation(boardP2);
 
-                        board2.printBoard();
-                        if(!board2.shipsLeft()) gameOver = true;
-                    }
-                    break;
-                case PLAYER_2:
-                    {
-                        Point bomb = player2.takeChooseBombLocation(board2);
-                        System.out.printf("bomb location chosen: x:%d, y:%d\n", bomb.x, bomb.y);
+            System.out.printf("bomb location chosen: x:%d, y:%d\n", bomb.x, bomb.y);
 
-                        if(board1.receiveBomb(bomb)) System.out.println("hit!\n");
-                        else System.out.println("miss");
+            Board enemyBoard = (currentTurn == Turn.PLAYER_1) ? boardP2 : boardP1;
 
-                        board1.printBoard();
-                        if(!board1.shipsLeft()) gameOver = true;
-                    }
-                break;
-            }
+            if(enemyBoard.receiveBomb(bomb)) System.out.println("hit!\n");
+            else System.out.println("miss\n");
+
+            enemyBoard.printBoard();
+            if(!enemyBoard.shipsLeft()) gameOver = true;
 
             System.out.println("======================================================\n\n");
 
             if(gameOver) System.out.println(currentTurn+" wins!!!");
 
-            currentTurn = currentTurn == Turn.PLAYER_1 ? Turn.PLAYER_2 :Turn.PLAYER_1;
+            currentTurn = (currentTurn == Turn.PLAYER_1) ? Turn.PLAYER_2 :Turn.PLAYER_1;
         }
 
     }

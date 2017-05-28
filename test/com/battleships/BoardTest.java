@@ -17,7 +17,7 @@ public class BoardTest {
     @Test
     public void goodBoardDirectionality(){
         System.out.println("Testing good board directionality");
-        String empty = Board.Tiles.EMPTY.value;
+        String empty = Board.Tile.EMPTY.getValue();
         String expected = empty+empty+"\n"+empty+empty+"\n"+empty+empty+"\n";
         board = new Board(2, 3);
         assertEquals("Testing board directionality failed",expected,board.printBoard());
@@ -27,7 +27,7 @@ public class BoardTest {
     @Test
     public void badBoardDirectionality(){
         System.out.println("Testing bad board directionality");
-        String empty = Board.Tiles.EMPTY.value;
+        String empty = Board.Tile.EMPTY.getValue();
         String expected = empty+empty+"\n"+empty+empty+"\n"+empty+empty+"\n";
         board = new Board(3, 2);
         assertFalse("Testing board directionality failed", expected.equals(board.printBoard()));
@@ -39,17 +39,9 @@ public class BoardTest {
         System.out.println("Testing ship placement by filling a small board");
         board = new Board(5,4);
         assertTrue(board.placeShip(new Ship(horizontal, new Point(0, 0), 4)));
-        board.printBoard();
-        System.out.println();
         assertTrue(board.placeShip(new Ship(horizontal,  new Point(0,1), 4)));
-        board.printBoard();
-        System.out.println();
         assertTrue(board.placeShip(new Ship(horizontal,  new Point(0,2), 4)));
-        board.printBoard();
-        System.out.println();
         assertTrue(board.placeShip(new Ship(horizontal,  new Point(0,3), 4)));
-        board.printBoard();
-        System.out.println();
         assertTrue(board.placeShip(new Ship(vertical, new Point(4,0), 4)));
         board.printBoard();
         System.out.println();
@@ -61,13 +53,13 @@ public class BoardTest {
     public void badPlaceShip(){
         System.out.println("Testing ship placement by trying to add a ship to a full board");
         board = new Board(5,4);
-        board.placeShip(new Ship(horizontal, new Point(0,0), 4));
-        board.placeShip(new Ship(horizontal, new Point(0,1), 4));
-        board.placeShip(new Ship(horizontal, new Point(0,2), 4));
-        board.placeShip(new Ship(horizontal, new Point(0,3), 4));
-        board.placeShip(new Ship(vertical,   new Point(4,0), 5));
+        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,0), 4)));
+        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,1), 4)));
+        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,2), 4)));
+        assertTrue(board.placeShip(new Ship(horizontal, new Point(0,3), 4)));
+        assertTrue(board.placeShip(new Ship(vertical,   new Point(4,0), 4)));
         for (int i=0; i<4; ++i){
-            for (int j=0; j<4; ++j){
+            for (int j=0; j<5; ++j){
                 Ship ship = new Ship(horizontal,new Point(j,i),1);
                 boolean result = board.placeShip(ship);
                 assertFalse("should not of been able to place ship", result);
@@ -83,14 +75,14 @@ public class BoardTest {
         Ship ship = new Ship(horizontal,point,5);
         board.placeShip(ship);
 
-        for(int i=0; i < ship.getSize(); ++i){
+        for(int i=ship.getMinX(); i <= ship.getMaxX(); ++i){
             Point bomb = new Point(i,0);
             boolean result = board.receiveBomb(bomb);
             assertTrue("receiveBomb (i:"+i+") should of been true", result);
         }
 
         for(int i=0; i < board.HEIGHT; ++i) {
-            for (int j = ship.getSize(); j < board.WIDTH; ++j) {
+            for (int j = ship.getMaxX(); j < board.WIDTH; ++j) {
                 Point bomb = new Point(j, i);
                 boolean result = board.receiveBomb(bomb);
                 assertFalse("receiveBomb (i:"+i+") should of been false", result);

@@ -41,7 +41,7 @@ public final class Player {
     }
 
 
-    public Point takeChooseBombLocation(Board board){
+    public Point chooseBombLocation(Board board){
         final int xPos = ThreadLocalRandom.current().nextInt(board.WIDTH);
         final int yPos = ThreadLocalRandom.current().nextInt(board.HEIGHT);
         return new Point(xPos,yPos);

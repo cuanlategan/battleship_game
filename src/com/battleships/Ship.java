@@ -14,7 +14,6 @@ public final class Ship {
     final Dir dir;
     private final Point position;
     private final int size;
-    private int health;
 
     static protected final Map<Integer, Integer> maxShips = Collections.unmodifiableMap(createMap());
 
@@ -31,35 +30,30 @@ public final class Ship {
 
     public enum Dir{VERTICAL, HORIZONTAL }
 
-    /*
-    public enum MAX_NUM_SHIP{
-        SIZE_2(3), SIZE_3(3), SIZE_4(2), SIZE_6(1);
-        public final int value;
-
-        MAX_NUM_SHIP(int value){
-            this.value = value;
-        }
-
-    }
-    */
 
     public Ship(Dir dir, Point position, int size){
         this.dir = dir;
         this.position = position;
         this.size = size;
-        this.health = size;
     }
 
 
-    public int getSize(){
-        return size;
-    }
-
-    public int getX(){
+    protected int getMinX(){
         return position.x;
     }
 
-    public int getY(){
+    protected int getMaxX(){
+        return dir == Dir.HORIZONTAL ? position.x + size-1: position.x;
+    }
+
+    protected int getMinY(){
         return position.y;
     }
+
+    protected int getMaxY(){
+
+        return dir == Dir.VERTICAL ? position.y + size-1: position.y;
+    }
+
+
 }
