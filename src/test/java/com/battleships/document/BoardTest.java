@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.battleships.document.Board;
+import com.battleships.document.Ship;
 import com.battleships.view.Main;
 import org.junit.Test;
 import java.awt.*;

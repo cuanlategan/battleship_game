@@ -2,6 +2,8 @@ package com.battleships.view;
 
 import com.battleships.document.Board;
 import com.battleships.document.Ship;
+import com.battleships.view.Main;
+import com.battleships.view.Player;
 import org.junit.Before;
 import org.junit.Test;
 
