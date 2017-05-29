@@ -2,15 +2,14 @@ package com.battleships.view;
 
 import com.battleships.document.Board;
 import com.battleships.document.Ship;
-import com.battleships.view.Main;
-import com.battleships.view.Player;
+
 import org.junit.Before;
 import org.junit.Test;
+import java.awt.Point;
 
-import java.awt.*;
-import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 
 public class PlayerTest {
@@ -26,8 +25,22 @@ public class PlayerTest {
 
 
     @Test
-    public void placeAllBoats(){
-        System.out.println("testing placing all boats!");
+    public void chooseBombLocation(){
+
+        System.out.println("Testing AI choosen bomblocation is within bounds");
+
+        Point loc = player.chooseBombLocation(board);
+
+        boolean withinBounds = (0 <= loc.x && loc.x < board.WIDTH &&
+                                0 <= loc.y && loc.y < board.HEIGHT);
+
+        assertTrue("chosen bomb location outside of board", withinBounds );
+    }
+
+
+    @Test
+    public void placeAllShips(){
+        System.out.println("testing placing all ships randomly");
         player.placeAllShipRandomnly(board);
         Main.printTiles(board.getTiles());
 
@@ -40,9 +53,13 @@ public class PlayerTest {
 
 
     @Test(expected =  RuntimeException.class)
-    public void failPlaceAllBoats(){
+    public void failPlaceAllShips(){
+
+        System.out.println("testing it is possible to place all ships");
+
         board = new Board(2,2);
         player.placeAllShipRandomnly(board);
         Main.printTiles(board.getTiles());
+
     }
 }

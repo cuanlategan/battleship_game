@@ -1,15 +1,16 @@
 package com.battleships.view;
 
-
 import com.battleships.document.Board;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.List;
 
 
 public class Main {
 
+
     private enum Turn {
+
         P1("Player-1"), P2("Player-2");
         private final String value;
 
@@ -28,14 +29,6 @@ public class Main {
             }
             result.append("\n");
         }
-
-
-        /*
-        board.stream().forEach(row -> {
-            row.stream().forEach(tile -> result.append(tile.getValue()));
-            result.append("\n");
-        });
-        */
 
         System.out.println(result.toString());
 
@@ -57,29 +50,32 @@ public class Main {
 
         while (!gameOver) {
 
-            System.out.println("\n======================================================");
+            System.out.println("======================================================");
 
             System.out.println(curTurn.getValue() + "'s turn");
 
             Point bomb = (curTurn == Turn.P1) ? player1.chooseBombLocation(boardP1) :
                                                     player2.chooseBombLocation(boardP2);
 
-            System.out.printf("bomb location chosen: x:%d, y:%d\n", bomb.x, bomb.y);
+            System.out.printf("bomb location chosen: x:%d, y:%d", bomb.x, bomb.y);
 
             Board enemyBoard = (curTurn == Turn.P1) ? boardP2 : boardP1;
 
-            if (enemyBoard.receiveBomb(bomb)) System.out.println("hit!\n");
-            else System.out.println("miss\n");
+            if (enemyBoard.receiveBomb(bomb)) System.out.println("... hit!");
+            else System.out.println("... miss\n");
 
+            System.out.println("printing opponent's board\n");
             printTiles(enemyBoard.getTiles());
-
-            if (!enemyBoard.shipsLeft()) gameOver = true;
 
             System.out.println("======================================================\n\n");
 
-            if (gameOver) System.out.println(curTurn.getValue() + " wins!!!");
+            if (!enemyBoard.shipsLeft()){
+                gameOver = true;
+                System.out.println(curTurn.getValue() + " wins!!!");
+            } else {
+                curTurn = (curTurn == Turn.P1) ? Turn.P2 : Turn.P1;
+            }
 
-            curTurn = (curTurn == Turn.P1) ? Turn.P2 : Turn.P1;
         }
 
     }

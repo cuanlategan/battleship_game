@@ -1,7 +1,6 @@
 package com.battleships.document;
 
-
-import java.awt.*;
+import java.awt.Point;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,8 +9,11 @@ import java.util.stream.Collectors;
 
 public class Board {
 
+    // Specifications only allow player to have one board, so a "MISS" tile is omitted as there is no way to
+    // represent a miss unless later on the spec's change to allow a player to have a "tracking board"
     public enum Tile {
-        EMPTY("O"), HIT("X"), VSHIP("|"), HSHIP("-");
+        //      u00B7 == middle-dot                u2014 == m-dash
+        EMPTY(" \u00B7"), HIT(" X"), VSHIP(" |"), HSHIP(" \u2014");
         private final String value;
 
         Tile(String value) {
@@ -44,7 +46,9 @@ public class Board {
 
 
     private List<List<Tile>> createTiles() {
+
         List<List<Tile>> result = new ArrayList<>();
+
         for (int i = 0; i < HEIGHT; ++i) {
             Tile[] row = new Tile[WIDTH];
             Arrays.fill(row, Tile.EMPTY);
@@ -99,7 +103,7 @@ public class Board {
 
     /**
      * @param point where bomb will land
-     * @return true if the bomb hit a ship
+     * @return true if the bomb hit a ship, false otherwise
      */
     public boolean receiveBomb(Point point) {
 
@@ -108,7 +112,6 @@ public class Board {
         switch (tile) {
             case EMPTY:
                 return false;
-            //todo add miss tile to Tiles
             case HIT:
                 return false;
             case VSHIP:
@@ -120,6 +123,7 @@ public class Board {
                 --shipLives;
                 return true;
         }
+
         return false;
     }
 
@@ -127,10 +131,13 @@ public class Board {
     public boolean shipsLeft() {
         return shipLives > 0;
     }
-    public int getShipLives(){
+
+    public int getShipLives() {
         return shipLives;
     }
 
-    public final List<List<Tile>> getTiles() {return tiles;}
+    public List<List<Tile>> getTiles() {
+        return tiles;
+    }
 
 }

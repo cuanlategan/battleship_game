@@ -1,6 +1,6 @@
 package com.battleships.document;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,20 +16,23 @@ public final class Ship {
 
     public static final Map<Integer, Integer> SHIPS_ALLOWED = Collections.unmodifiableMap(createMap());
 
+
+    public Ship(Dir dir, Point position, int size) {
+
+        this.dir = dir;
+        this.position = position;
+        this.size = size;
+    }
+
+
     private static Map<Integer, Integer> createMap() {
-        final Map<Integer, Integer> result = new HashMap<>();
         // <Size of ship, amount allowed>
+        final Map<Integer, Integer> result = new HashMap<>();
         result.put(2,3);
         result.put(3,3);
         result.put(4,2);
         result.put(6,1);
         return result;
-    }
-
-    public Ship(Dir dir, Point position, int size){
-        this.dir = dir;
-        this.position = position;
-        this.size = size;
     }
 
 
